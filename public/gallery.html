@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Wedding Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fefcf8;
+      --blush: #e8c4b0;
+      --rose: #c98b6b;
+      --deep: #3a2d26;
+      --mid: #7a6055;
+      --light-mid: #b09688;
+      --accent: #9b6f52;
+      --gold: #c9a96e;
+      --border: rgba(58,45,38,0.12);
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--deep);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 64px 24px 40px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      color: var(--deep);
+    }
+
+    h1 em { font-style: italic; color: var(--accent); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      justify-content: center;
+      margin: 28px auto;
+      max-width: 240px;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .divider span { font-size: 16px; color: var(--gold); opacity: 0.6; }
+
+    .stats {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--light-mid);
+      text-transform: uppercase;
+    }
+
+    .upload-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: var(--deep);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border-radius: 1px;
+      transition: background 0.2s;
+    }
+    .upload-link:hover { background: var(--accent); }
+
+    /* Gallery */
+    main {
+      position: relative;
+      z-index: 1;
+      padding: 0 16px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Masonry-style grid */
+    .gallery-grid {
+      columns: 4 220px;
+      column-gap: 12px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 12px;
+      position: relative;
+      cursor: pointer;
+      border-radius: 2px;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .gallery-item img, .gallery-item video {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover img,
+    .gallery-item:hover video {
+      transform: scale(1.03);
+    }
+
+    .gallery-item .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(58,45,38,0.7) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+
+    .gallery-item:hover .overlay { opacity: 1; }
+
+    .overlay-name {
+      color: var(--cream);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .overlay-name strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+    }
+
+    .video-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(58,45,38,0.7);
+      color: var(--cream);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    /* Loading */
+    .loading-state {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--light-mid);
+    }
+
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--rose);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .empty-state .empty-icon { font-size: 3rem; display: block; margin-bottom: 20px; opacity: 0.4; }
+
+    .empty-state h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2rem;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .empty-state p { color: var(--light-mid); font-size: 13px; }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 14, 11, 0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-inner img, .lightbox-inner video {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      color: rgba(250,247,242,0.7);
+      font-size: 28px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .lightbox-close:hover { color: var(--cream); }
+
+    .lightbox-caption {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(250,247,242,0.6);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      white-space: nowrap;
+    }
+
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(250,247,242,0.1);
+      border: none;
+      color: var(--cream);
+      font-size: 24px;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(250,247,242,0.2); }
+    .lightbox-nav.prev { left: 16px; }
+    .lightbox-nav.next { right: 16px; }
+
+    @media (max-width: 600px) {
+      .gallery-grid { columns: 2 140px; }
+      .lightbox-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="eyebrow">Every moment captured</span>
+    <h1>Our Wedding<br /><em>Gallery</em></h1>
+    <div class="divider"><span>✦</span></div>
+    <p class="stats" id="statsText">Loading memories…</p>
+    <a href="/" class="upload-link">+ Add your photos</a>
+  </header>
+
+  <main>
+    <div id="loadingState" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Gathering your memories…</p>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display:none">
+      <span class="empty-icon">📷</span>
+      <h2>No photos yet</h2>
+      <p>Be the first to share a memory from our special day.</p>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+    <div class="lightbox-inner" id="lightboxInner"></div>
+    <button class="lightbox-nav next" id="lightboxNext">›</button>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <script>
+    let allFiles = [];
+    let currentIndex = 0;
+
+    async function loadGallery() {
+      try {
+        const res = await fetch('/api/gallery');
+        const data = await res.json();
+
+        document.getElementById('loadingState').style.display = 'none';
+
+        if (!data.files || data.files.length === 0) {
+          document.getElementById('emptyState').style.display = 'block';
+          document.getElementById('statsText').textContent = 'No photos uploaded yet';
+          return;
+        }
+
+        allFiles = data.files;
+        const photoCount = allFiles.filter(f => f.type.startsWith('image')).length;
+        const videoCount = allFiles.filter(f => f.type.startsWith('video')).length;
+        let statsStr = `${data.total} ${data.total === 1 ? 'memory' : 'memories'} shared`;
+        if (videoCount > 0) statsStr += ` · ${photoCount} photos, ${videoCount} videos`;
+        document.getElementById('statsText').textContent = statsStr;
+
+        const grid = document.getElementById('galleryGrid');
+
+        allFiles.forEach((file, index) => {
+          const item = document.createElement('div');
+          item.className = 'gallery-item';
+          item.style.animationDelay = `${Math.min(index * 0.04, 0.6)}s`;
+
+          const isVideo = file.type.startsWith('video');
+          const date = new Date(file.uploadedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+
+          if (isVideo) {
+            const vid = document.createElement('video');
+            vid.src = file.url;
+            vid.muted = true;
+            vid.loop = true;
+            vid.playsInline = true;
+            item.appendChild(vid);
+
+            // Play on hover
+            item.addEventListener('mouseenter', () => vid.play());
+            item.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+
+            const badge = document.createElement('div');
+            badge.className = 'video-badge';
+            badge.textContent = '▶ VIDEO';
+            item.appendChild(badge);
+          } else {
+            const img = document.createElement('img');
+            img.src = file.url;
+            img.alt = `Photo by ${file.guestName}`;
+            img.loading = 'lazy';
+            item.appendChild(img);
+          }
+
+          const overlay = document.createElement('div');
+          overlay.className = 'overlay';
+          overlay.innerHTML = `<div class="overlay-name"><strong>${file.guestName}</strong>${date}</div>`;
+          item.appendChild(overlay);
+
+          item.addEventListener('click', () => openLightbox(index));
+          grid.appendChild(item);
+        });
+
+      } catch (err) {
+        document.getElementById('loadingState').innerHTML = '<p style="color:var(--rose)">Could not load gallery. Please refresh.</p>';
+      }
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
+      renderLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+      // Stop any playing video
+      const vid = document.querySelector('#lightboxInner video');
+      if (vid) vid.pause();
+    }
+
+    function renderLightbox() {
+      const file = allFiles[currentIndex];
+      const inner = document.getElementById('lightboxInner');
+      inner.innerHTML = '';
+
+      if (file.type.startsWith('video')) {
+        const vid = document.createElement('video');
+        vid.src = file.url;
+        vid.controls = true;
+        vid.autoplay = true;
+        inner.appendChild(vid);
+      } else {
+        const img = document.createElement('img');
+        img.src = file.url;
+        inner.appendChild(img);
+      }
+
+      document.getElementById('lightboxCaption').textContent = file.guestName;
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    });
+
+    document.getElementById('lightboxPrev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + allFiles.length) % allFiles.length;
+      renderLightbox();
+    });
+
+    document.getElementById('lightboxNext').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % allFiles.length;
+      renderLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') { currentIndex = (currentIndex - 1 + allFiles.length) % allFiles.length; renderLightbox(); }
+      if (e.key === 'ArrowRight') { currentIndex = (currentIndex + 1) % allFiles.length; renderLightbox(); }
+    });
+
+    loadGallery();
+  </script>
+</body>
+</html>

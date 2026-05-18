@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sudjelujte u našem svadbenom vlogu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #fdfbf3;
+      --warm-white: #fffef7;
+      --gold-light: #f5d98a;
+      --gold: #e8b830;
+      --gold-deep: #c49a0a;
+      --gold-dark: #9a7200;
+      --deep: #2a2208;
+      --mid: #6b5a1a;
+      --light-mid: #a08c3a;
+      --accent: #d4a010;
+      --border: rgba(42,34,8,0.13);
+      --border-gold: rgba(232,184,48,0.35);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--deep);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .botanical-top {
+      position: relative;
+      text-align: center;
+      padding-top: 48px;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .botanical-top svg {
+      width: min(480px, 90vw);
+      display: block;
+      margin: 0 auto -50px;
+    }
+
+    header {
+      position: relative;
+      text-align: center;
+      padding: 72px 24px 40px;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 18px;
+      display: block;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      line-height: 1.1;
+      color: var(--deep);
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      color: var(--light-mid);
+      margin-top: 18px;
+      line-height: 1.9;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: center;
+      margin: 28px auto;
+      max-width: 260px;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border-gold); }
+    .divider span { font-size: 16px; color: var(--gold); }
+
+    /* ── Upload section ── */
+    .upload-section {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .upload-card {
+      background: var(--warm-white);
+      border: 1px solid var(--border-gold);
+      border-radius: 3px;
+      padding: 44px 40px;
+      box-shadow: 0 4px 48px rgba(232,184,48,0.08), 0 0 0 1px rgba(232,184,48,0.06);
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-label {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 1.5px dashed var(--border-gold);
+      border-radius: 3px;
+      padding: 52px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: rgba(232,184,48,0.02);
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--gold);
+      background: rgba(232,184,48,0.06);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon { font-size: 2.4rem; margin-bottom: 14px; display: block; }
+    .drop-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--mid);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+    .drop-sub { font-size: 11px; letter-spacing: 0.1em; color: var(--light-mid); }
+
+    /* Limit bar */
+    .limit-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .limit-text { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-mid); }
+    .limit-count { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--accent); }
+    .limit-count.at-limit { color: #c0392b; }
+
+    .progress-track {
+      height: 2px;
+      background: var(--border);
+      border-radius: 999px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-light), var(--gold));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Preview grid */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .preview-item {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 2px;
+      overflow: hidden;
+      animation: popIn 0.3s ease both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .preview-item img, .preview-item video {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .preview-item .remove-btn {
+      position: absolute; top: 4px; right: 4px;
+      width: 20px; height: 20px;
+      background: rgba(42,34,8,0.75);
+      color: #fff; border: none; border-radius: 50%;
+      cursor: pointer; font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .preview-item:hover .remove-btn { opacity: 1; }
+    .preview-item .file-type-badge {
+      position: absolute; bottom: 4px; left: 4px;
+      background: rgba(42,34,8,0.65);
+      color: #fff; font-size: 9px; padding: 2px 5px;
+      border-radius: 999px; letter-spacing: 0.05em;
+    }
+
+    /* Message */
+    .message { padding: 14px 18px; border-radius: 2px; font-size: 13px; margin-bottom: 18px; display: none; }
+    .message.error { background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.2); color: #922b21; display: block; }
+    .message.success { background: rgba(39,174,96,0.07); border: 1px solid rgba(39,174,96,0.2); color: #1e8449; display: block; }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 18px 32px;
+      background: var(--gold-deep);
+      color: var(--cream);
+      border: none; border-radius: 2px;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .submit-btn:hover:not(:disabled) { background: var(--gold-dark); }
+    .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .submit-btn .btn-loading { display: none; align-items: center; justify-content: center; gap: 8px; }
+    .submit-btn.loading .btn-text { display: none; }
+    .submit-btn.loading .btn-loading { display: flex; }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 1.5px solid rgba(253,251,243,0.3);
+      border-top-color: var(--cream);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Success inline (stays in card, shows "add more" button) */
+    .mini-success {
+      display: none;
+      text-align: center;
+      padding: 32px 16px 20px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .mini-success.visible { display: block; }
+    .mini-success-icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+    .mini-success h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-size: 1.8rem;
+      color: var(--deep); margin-bottom: 8px;
+    }
+    .mini-success p { color: var(--light-mid); font-size: 13px; line-height: 1.8; margin-bottom: 22px; }
+    .add-more-btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: transparent;
+      color: var(--gold-deep);
+      border: 1.5px solid var(--border-gold);
+      font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+      border-radius: 2px; transition: all 0.2s; cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      margin-right: 10px;
+    }
+    .add-more-btn:hover { background: rgba(232,184,48,0.06); border-color: var(--gold); }
+    .gallery-jump-btn {
+      display: inline-block; margin-top: 0;
+      padding: 14px 28px;
+      background: var(--gold-deep);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+      border-radius: 2px; transition: background 0.2s; cursor: pointer; border: none;
+      font-family: 'Jost', sans-serif;
+    }
+    .gallery-jump-btn:hover { background: var(--gold-dark); }
+
+    /* ── Gallery section ── */
+    .gallery-section {
+      position: relative;
+      z-index: 1;
+      padding: 0 16px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .gallery-header {
+      text-align: center;
+      padding: 20px 0 40px;
+    }
+
+    .gallery-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: var(--deep);
+      margin-bottom: 8px;
+    }
+    .gallery-header h2 em { font-style: italic; color: var(--accent); }
+    .gallery-stats { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--light-mid); }
+
+    .gallery-grid {
+      columns: 4 200px;
+      column-gap: 10px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 10px;
+      position: relative;
+      cursor: pointer;
+      border-radius: 2px;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .gallery-item img, .gallery-item video {
+      width: 100%; display: block;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img, .gallery-item:hover video { transform: scale(1.04); }
+
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(42,34,8,0.65) 0%, transparent 55%);
+      opacity: 0; transition: opacity 0.3s;
+      display: flex; align-items: flex-end; padding: 14px;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+
+    .overlay-name {
+      color: var(--cream); font-size: 11px; letter-spacing: 0.06em;
+    }
+    .overlay-name strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 300; font-style: italic;
+    }
+
+    .video-badge {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(42,34,8,0.7); color: var(--cream);
+      font-size: 9px; letter-spacing: 0.1em;
+      padding: 3px 7px; border-radius: 999px;
+    }
+
+    .gallery-empty {
+      text-align: center; padding: 60px 24px; color: var(--light-mid);
+      font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-style: italic;
+    }
+
+    .gallery-loading {
+      text-align: center; padding: 48px;
+    }
+    .gallery-loading .g-spinner {
+      width: 28px; height: 28px;
+      border: 2px solid var(--border-gold);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(18,13,4,0.93);
+      z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-inner { position: relative; max-width: 90vw; max-height: 90vh; display: flex; align-items: center; justify-content: center; }
+    .lightbox-inner img, .lightbox-inner video { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 2px; }
+    .lightbox-close {
+      position: fixed; top: 18px; right: 22px;
+      color: rgba(253,251,243,0.65); font-size: 28px; cursor: pointer;
+      background: none; border: none; line-height: 1; transition: color 0.2s;
+    }
+    .lightbox-close:hover { color: var(--cream); }
+    .lightbox-caption {
+      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+      color: rgba(253,251,243,0.55);
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem;
+      white-space: nowrap;
+    }
+    .lightbox-nav {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: rgba(253,251,243,0.1); border: none; color: var(--cream);
+      font-size: 26px; padding: 12px 16px; cursor: pointer; border-radius: 2px;
+      transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(253,251,243,0.2); }
+    .lightbox-nav.prev { left: 14px; }
+    .lightbox-nav.next { right: 14px; }
+
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 0 24px 40px;
+      font-size: 11px; letter-spacing: 0.1em; color: var(--light-mid);
+    }
+
+    /* ── Limit modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(18,13,4,0.7);
+      z-index: 2000; align-items: center; justify-content: center; padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--warm-white);
+      border: 1px solid var(--border-gold);
+      border-radius: 3px;
+      padding: 48px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: fadeUp 0.35s ease both;
+      box-shadow: 0 8px 64px rgba(42,34,8,0.25);
+    }
+    .modal-icon { font-size: 2.8rem; display: block; margin-bottom: 16px; }
+    .modal-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-size: 2rem;
+      color: var(--deep); margin-bottom: 12px;
+    }
+    .modal-box p { color: var(--light-mid); font-size: 13px; line-height: 1.9; margin-bottom: 28px; }
+    .modal-close-btn {
+      padding: 14px 32px;
+      background: var(--gold-deep);
+      color: var(--cream);
+      border: none; border-radius: 2px;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .modal-close-btn:hover { background: var(--gold-dark); }
+
+    @media (max-width: 500px) {
+      .upload-card { padding: 28px 20px; }
+      h1 { font-size: 2rem; }
+      .gallery-grid { columns: 2 140px; }
+      .lightbox-nav { display: none; }
+      .modal-box { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="botanical-top">
+    <svg viewBox="0 0 400 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M200 100 C185 80 155 65 120 55 C85 45 50 52 22 35" stroke="#e8b830" stroke-width="0.8" fill="none" opacity="0.4"/>
+      <path d="M200 100 C215 80 245 65 280 55 C315 45 350 52 378 35" stroke="#e8b830" stroke-width="0.8" fill="none" opacity="0.4"/>
+      <ellipse cx="118" cy="52" rx="20" ry="11" transform="rotate(-28 118 52)" fill="#f5d98a" opacity="0.35"/>
+      <ellipse cx="88" cy="40" rx="15" ry="8" transform="rotate(-48 88 40)" fill="#e8b830" opacity="0.22"/>
+      <ellipse cx="282" cy="52" rx="20" ry="11" transform="rotate(28 282 52)" fill="#f5d98a" opacity="0.35"/>
+      <ellipse cx="312" cy="40" rx="15" ry="8" transform="rotate(48 312 40)" fill="#e8b830" opacity="0.22"/>
+      <circle cx="200" cy="99" r="4" fill="#e8b830" opacity="0.5"/>
+      <circle cx="158" cy="72" r="2.5" fill="#c49a0a" opacity="0.4"/>
+      <circle cx="242" cy="72" r="2.5" fill="#c49a0a" opacity="0.4"/>
+      <circle cx="140" cy="58" r="1.5" fill="#e8b830" opacity="0.3"/>
+      <circle cx="260" cy="58" r="1.5" fill="#e8b830" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <header>
+    <span class="eyebrow">Dan za pamćenje</span>
+    <h1>Sudjelujte u našem<br /><em>svadbenom vlogu</em></h1>
+    <div class="divider"><span>✦</span></div>
+    <p class="subtitle">
+      Podijelite svoje fotografije i videe s našeg posebnog dana.<br />
+      Uploadajte kad god želite — i za vrijeme i nakon vjenčanja.
+    </p>
+  </header>
+
+  <!-- Upload -->
+  <div class="upload-section">
+    <div class="upload-card" id="uploadCard">
+      <span class="card-label" id="cardLabel">Vaš doprinos</span>
+      <div id="messageBox" class="message"></div>
+
+      <div id="uploadForm">
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInput" multiple accept="image/*,video/*,.heic,.heif,.mov,.mp4,.avi,.mkv,.webm,.3gp" />
+          <span class="drop-icon">🌼</span>
+          <p class="drop-text">Dodajte fotografije i videe</p>
+          <p class="drop-sub">kliknite za odabir · sve vrste slika i videa · iPhone formati podržani</p>
+        </div>
+
+        <div class="limit-bar">
+          <span class="limit-text">Odabrano datoteka</span>
+          <span class="limit-count" id="fileCount">0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="preview-grid" id="previewGrid"></div>
+
+        <button class="submit-btn" id="submitBtn" disabled>
+          <span class="btn-text">Pošalji uspomene</span>
+          <span class="btn-loading"><span class="spinner"></span> Učitavanje…</span>
+        </button>
+      </div>
+
+      <!-- Mini success shown inside the card -->
+      <div class="mini-success" id="miniSuccess">
+        <span class="mini-success-icon">🌹</span>
+        <h3>Hvala vam!</h3>
+        <p id="miniSuccessMsg">Vaše uspomene su sigurno primljene.<br />Možete dodati još fotografija kad god želite.</p>
+        <button class="add-more-btn" id="addMoreBtn">+ Dodaj još</button>
+        <button class="gallery-jump-btn" onclick="scrollToGallery()">Pogledajte galeriju ↓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery-section" id="gallerySection">
+    <div class="gallery-header">
+      <div class="divider"><span>✦</span></div>
+      <h2>Naša svadbena <em>galerija</em></h2>
+      <p class="gallery-stats" id="galleryStats">Učitavanje uspomena…</p>
+    </div>
+
+    <div class="gallery-loading" id="galleryLoading">
+      <div class="g-spinner"></div>
+    </div>
+
+    <div class="gallery-empty" id="galleryEmpty" style="display:none">
+      Još nema fotografija — budite prvi! 📷
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+    <div class="lightbox-inner" id="lightboxInner"></div>
+    <button class="lightbox-nav next" id="lightboxNext">›</button>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- Limit reached modal -->
+  <div class="modal-overlay" id="limitModal">
+    <div class="modal-box">
+      <span class="modal-icon">🌟</span>
+      <h3>Hvala vam!</h3>
+      <p>Dostigli ste maksimalan broj od 20 fotografija/videa po uploadu.<br />Pošaljite ovaj paket, a zatim možete dodati još!</p>
+      <button class="modal-close-btn" id="modalCloseBtn">Razumijem</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="divider"><span>✦</span></div>
+    <p>Napravljeno s ljubavlju · Svi uploadi su privatni</p>
+  </footer>
+
+  <script>
+    const MAX_FILES = 20;         // total lifetime limit per guest
+    const STORAGE_KEY = 'wedding_uploaded_count';
+
+    // How many files has this guest already uploaded (persists across refreshes)
+    function getUploadedCount() {
+      return parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+    }
+    function addUploadedCount(n) {
+      localStorage.setItem(STORAGE_KEY, getUploadedCount() + n);
+    }
+    function remaining() {
+      return Math.max(0, MAX_FILES - getUploadedCount());
+    }
+
+    let selectedFiles = [];
+    let allGalleryFiles = [];
+    let currentLightboxIndex = 0;
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const previewGrid = document.getElementById('previewGrid');
+    const fileCount = document.getElementById('fileCount');
+    const progressFill = document.getElementById('progressFill');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageBox = document.getElementById('messageBox');
+    const uploadForm = document.getElementById('uploadForm');
+    const miniSuccess = document.getElementById('miniSuccess');
+    const addMoreBtn = document.getElementById('addMoreBtn');
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFiles(Array.from(e.dataTransfer.files));
+    });
+    fileInput.addEventListener('change', () => {
+      handleFiles(Array.from(fileInput.files));
+      fileInput.value = '';
+    });
+
+    function handleFiles(newFiles) {
+      const allowed = remaining() - selectedFiles.length;
+      if (allowed <= 0) { showLimitModal(); return; }
+      const toAdd = newFiles.slice(0, allowed);
+      if (newFiles.length > allowed) showLimitModal();
+      else clearMessage();
+
+      toAdd.forEach(file => {
+        selectedFiles.push(file);
+        renderPreview(file, selectedFiles.length - 1);
+      });
+      updateUI();
+    }
+
+    function renderPreview(file, index) {
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+
+      const isVideo = file.type.startsWith('video/') || /\.(mov|mp4|avi|mkv|webm|3gp|hevc)$/i.test(file.name);
+
+      if (isVideo) {
+        const vid = document.createElement('video');
+        vid.src = URL.createObjectURL(file);
+        vid.muted = true;
+        item.appendChild(vid);
+      } else {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        item.appendChild(img);
+      }
+
+      const badge = document.createElement('span');
+      badge.className = 'file-type-badge';
+      badge.textContent = isVideo ? 'VIDEO' : 'FOTO';
+      item.appendChild(badge);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = '✕';
+      removeBtn.addEventListener('click', () => {
+        selectedFiles.splice(index, 1);
+        previewGrid.innerHTML = '';
+        selectedFiles.forEach((f, i) => renderPreview(f, i));
+        updateUI();
+        clearMessage();
+      });
+      item.appendChild(removeBtn);
+      previewGrid.appendChild(item);
+    }
+
+    function updateUI() {
+      const count = selectedFiles.length;
+      const slots = remaining();
+      fileCount.textContent = count;
+      // Show how many they have left overall
+      const limitTextEl = document.querySelector('.limit-text');
+      if (limitTextEl) {
+        limitTextEl.textContent = slots === 0
+          ? 'Dostigli ste maksimum (20)'
+          : `Odabrano · još ${slots - count} slobodnih mjesta`;
+      }
+      progressFill.style.width = count > 0 ? `${Math.min((count / slots) * 100, 100)}%` : '0%';
+      submitBtn.disabled = count === 0;
+    }
+
+    function showLimitModal() {
+      document.getElementById('limitModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLimitModal() {
+      document.getElementById('limitModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('modalCloseBtn').addEventListener('click', closeLimitModal);
+    document.getElementById('limitModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('limitModal')) closeLimitModal();
+    });
+
+    function showMessage(text, type) { messageBox.textContent = text; messageBox.className = `message ${type}`; }
+    function clearMessage() { messageBox.className = 'message'; }
+
+    function resetUploadForm() {
+      selectedFiles = [];
+      previewGrid.innerHTML = '';
+      updateUI();
+      clearMessage();
+      document.getElementById('cardLabel').textContent = 'Dodajte još uspomena';
+      uploadForm.style.display = 'block';
+      miniSuccess.classList.remove('visible');
+    }
+
+    addMoreBtn.addEventListener('click', resetUploadForm);
+
+    submitBtn.addEventListener('click', async () => {
+      if (selectedFiles.length === 0) return;
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+      clearMessage();
+
+      const formData = new FormData();
+      formData.append('guestName', 'Gost');
+      selectedFiles.forEach(file => formData.append('files', file));
+
+      try {
+        const res = await fetch('/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          addUploadedCount(data.count);   // remember this for future sessions
+          const count = data.count;
+          const left = remaining();
+          document.getElementById('miniSuccessMsg').innerHTML =
+            `${count} ${count === 1 ? 'datoteka je primljena' : 'datoteka je primljeno'}. ✓<br />`+
+            (left > 0
+              ? `Još možete dodati <strong>${left}</strong> fotografija/videa kad god želite — i večeras i sutra!`
+              : `Dostigli ste maksimum od 20 datoteka. Hvala vam što ste podijelili uspomene! 🌹`);
+          uploadForm.style.display = 'none';
+          miniSuccess.classList.add('visible');
+          // Hide "add more" button if they've used all 20 slots
+          document.getElementById('addMoreBtn').style.display = left > 0 ? '' : 'none';
+          submitBtn.classList.remove('loading');
+          loadGallery();
+        } else {
+          showMessage(data.error || 'Greška pri uploadu. Pokušajte ponovo.', 'error');
+          submitBtn.classList.remove('loading');
+          submitBtn.disabled = false;
+        }
+      } catch {
+        showMessage('Greška mreže. Provjerite vezu i pokušajte ponovo.', 'error');
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+      }
+    });
+
+    function scrollToGallery() {
+      document.getElementById('gallerySection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ── Gallery ──
+    async function loadGallery() {
+      try {
+        const res = await fetch('/api/gallery');
+        const data = await res.json();
+        document.getElementById('galleryLoading').style.display = 'none';
+
+        if (!data.files || data.files.length === 0) {
+          document.getElementById('galleryEmpty').style.display = 'block';
+          document.getElementById('galleryStats').textContent = 'Još nema fotografija';
+          return;
+        }
+
+        allGalleryFiles = data.files;
+        const photos = allGalleryFiles.filter(f => !f.type.startsWith('video')).length;
+        const videos = allGalleryFiles.filter(f => f.type.startsWith('video')).length;
+        let stats = `${data.total} ${data.total === 1 ? 'uspomena' : 'uspomena'} podijeljeno`;
+        if (videos > 0) stats += ` · ${photos} fotografija, ${videos} videa`;
+        document.getElementById('galleryStats').textContent = stats;
+
+        const grid = document.getElementById('galleryGrid');
+        grid.innerHTML = '';
+
+        allGalleryFiles.forEach((file, index) => {
+          const item = document.createElement('div');
+          item.className = 'gallery-item';
+          item.style.animationDelay = `${Math.min(index * 0.035, 0.5)}s`;
+
+          const isVideo = file.type.startsWith('video');
+          const date = new Date(file.uploadedAt).toLocaleDateString('hr-HR', { day: 'numeric', month: 'long' });
+
+          if (isVideo) {
+            const vid = document.createElement('video');
+            vid.src = file.url;
+            vid.muted = true; vid.loop = true; vid.playsInline = true;
+            item.appendChild(vid);
+            item.addEventListener('mouseenter', () => vid.play());
+            item.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+            const badge = document.createElement('div');
+            badge.className = 'video-badge';
+            badge.textContent = '▶ VIDEO';
+            item.appendChild(badge);
+          } else {
+            const img = document.createElement('img');
+            img.src = file.url; img.loading = 'lazy';
+            item.appendChild(img);
+          }
+
+          const overlay = document.createElement('div');
+          overlay.className = 'overlay';
+          overlay.innerHTML = `<div class="overlay-name"><strong>Gost</strong>${date}</div>`;
+          item.appendChild(overlay);
+
+          item.addEventListener('click', () => openLightbox(index));
+          grid.appendChild(item);
+        });
+
+      } catch {
+        document.getElementById('galleryLoading').innerHTML = '<p style="color:var(--accent);text-align:center">Greška pri učitavanju galerije.</p>';
+      }
+    }
+
+    // ── Lightbox ──
+    function openLightbox(index) {
+      currentLightboxIndex = index;
+      renderLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+      const vid = document.querySelector('#lightboxInner video');
+      if (vid) vid.pause();
+    }
+    function renderLightbox() {
+      const file = allGalleryFiles[currentLightboxIndex];
+      const inner = document.getElementById('lightboxInner');
+      inner.innerHTML = '';
+      if (file.type.startsWith('video')) {
+        const vid = document.createElement('video');
+        vid.src = file.url; vid.controls = true; vid.autoplay = true;
+        inner.appendChild(vid);
+      } else {
+        const img = document.createElement('img');
+        img.src = file.url;
+        inner.appendChild(img);
+      }
+      document.getElementById('lightboxCaption').textContent =
+        new Date(file.uploadedAt).toLocaleDateString('hr-HR', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox').addEventListener('click', e => { if (e.target === document.getElementById('lightbox')) closeLightbox(); });
+    document.getElementById('lightboxPrev').addEventListener('click', () => { currentLightboxIndex = (currentLightboxIndex - 1 + allGalleryFiles.length) % allGalleryFiles.length; renderLightbox(); });
+    document.getElementById('lightboxNext').addEventListener('click', () => { currentLightboxIndex = (currentLightboxIndex + 1) % allGalleryFiles.length; renderLightbox(); });
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') { currentLightboxIndex = (currentLightboxIndex - 1 + allGalleryFiles.length) % allGalleryFiles.length; renderLightbox(); }
+      if (e.key === 'ArrowRight') { currentLightboxIndex = (currentLightboxIndex + 1) % allGalleryFiles.length; renderLightbox(); }
+    });
+
+    loadGallery();
+
+    // On load — if they've uploaded before, show a subtle reminder
+    (function checkReturningGuest() {
+      const done = getUploadedCount();
+      if (done > 0 && done < MAX_FILES) {
+        const msg = document.getElementById('messageBox');
+        msg.textContent = `Dobrodošli natrag! Dosad ste poslali ${done} od ${MAX_FILES} datoteka. Još možete dodati ${remaining()}.`;
+        msg.className = 'message success';
+      } else if (done >= MAX_FILES) {
+        document.getElementById('uploadForm').style.display = 'none';
+        document.getElementById('miniSuccess').classList.add('visible');
+        document.getElementById('miniSuccessMsg').innerHTML =
+          `Dostigli ste maksimum od 20 datoteka. Hvala vam što ste podijelili uspomene! 🌹`;
+        document.getElementById('addMoreBtn').style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>
